@@ -15,27 +15,28 @@ const {
   VITE_FIREBASE_MESSAGING_SENDER_ID,
 } = import.meta.env
 
+export const isFirebaseInit = ref(false)
+
 export const install: UserModule = ({ router, isClient }) => {
   if (!isClient)
     return
 
-  const isInitalized = ref(false)
-
-  firebase.initializeApp({
-    apiKey: VITE_FIREBASE_API_KEY,
-    authDomain: VITE_FIREBASE_AUTH_DOMAIN,
-    projectId: VITE_FIREBASE_PROJECT_ID,
-    storageBucket: VITE_FIREBASE_STORAGE_BUCKET,
-    messagingSenderId: VITE_FIREBASE_MESSAGING_SENDER_ID,
-    appId: VITE_FIREBASE_APP_ID,
-    measurementId: VITE_FIREBASE_MEASUREMENT_ID,
-  }).auth().onAuthStateChanged(_ => isInitalized.value = true)
-
+  if (firebase.apps.length === 0) {
+    firebase.initializeApp({
+      apiKey: VITE_FIREBASE_API_KEY,
+      authDomain: VITE_FIREBASE_AUTH_DOMAIN,
+      projectId: VITE_FIREBASE_PROJECT_ID,
+      storageBucket: VITE_FIREBASE_STORAGE_BUCKET,
+      messagingSenderId: VITE_FIREBASE_MESSAGING_SENDER_ID,
+      appId: VITE_FIREBASE_APP_ID,
+      measurementId: VITE_FIREBASE_MEASUREMENT_ID,
+    }).auth().onAuthStateChanged(_ => isFirebaseInit.value = true)
+  }
   /**
    * Router Hooks
    */
   router.beforeEach(async(to) => {
-    await when(isInitalized).toBeTruthy()
+    await when(isFirebaseInit).toBeTruthy()
     const { isAuthenticated } = useAuth()
 
     if (to.name === 'auth-signin' && isAuthenticated.value)

@@ -1,33 +1,31 @@
-import type { ClientOptions } from '@urql/vue'
-import firebase from 'firebase/app'
+import { when } from '@vueuse/core'
+
+import 'firebase/auth'
+import { useAuth } from '@vueuse/firebase'
+
+import urql, { ClientOptions } from '@urql/vue'
 import { makeOperation, dedupExchange, cacheExchange, fetchExchange } from '@urql/core'
 import { authExchange } from '@urql/exchange-auth'
 
-import 'firebase/auth'
-import urql from '@urql/vue'
-import { useAuth } from '@vueuse/firebase'
-import { watch, ref } from 'vue'
-import { when } from '@vueuse/core'
+import { isFirebaseInit } from './firebase'
 import { UserModule } from '~/types'
 
 const { VITE_GRAPHQL_URL } = import.meta.env
 
-const isInitalized = ref(false)
-
-function addAuthExchange(user: any) {
+function addAuthExchange() {
   return authExchange({
-    getAuth() {
-      return new Promise<string>((resolve) => {
-        if (user.value) { user.value.getIdToken().then((token: string) => resolve(token)) }
-        else {
-          const stop = watch(user, () => {
-            if (user.value) {
-              user.value.getIdToken().then((token: string) => resolve(token))
-              stop()
-            }
-          })
-        }
-      })
+    async getAuth() {
+      await when(isFirebaseInit).toBeTruthy({ timeout: 500 })
+
+      if (!isFirebaseInit.value)
+        return null
+
+      const { isAuthenticated, user } = useAuth()
+
+      if (!isAuthenticated.value)
+        return null
+
+      return await user.value?.getIdToken()
     },
     addAuthToOperation({ operation, authState }) {
       if (!authState)
@@ -50,18 +48,16 @@ function addAuthExchange(user: any) {
 }
 
 export const install: UserModule = ({ app, isClient }) => {
-  if (isClient) {
-    const { user } = useAuth()
-    firebase.auth().onAuthStateChanged(_ => isInitalized.value = true)
+  if (!isClient)
+    return
 
-    app.use(urql, {
-      url: VITE_GRAPHQL_URL,
-      exchanges: [
-        dedupExchange,
-        cacheExchange,
-        // addAuthExchange(user),
-        fetchExchange,
-      ],
-    } as ClientOptions)
-  }
+  app.use(urql, {
+    url: VITE_GRAPHQL_URL,
+    exchanges: [
+      dedupExchange,
+      cacheExchange,
+      addAuthExchange(),
+      fetchExchange,
+    ],
+  } as ClientOptions)
 }
