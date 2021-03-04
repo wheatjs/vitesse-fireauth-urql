@@ -1,6 +1,11 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
+import firebase from 'firebase/app'
+import { useAuth } from '@vueuse/firebase'
 import { isDark, toggleDark } from '~/logics'
+
+const auth = firebase.auth()
+const { isAuthenticated } = useAuth()
 
 const { t, availableLocales, locale } = useI18n()
 
@@ -8,6 +13,11 @@ const toggleLocales = () => {
   // change to some real logic
   const locales = availableLocales
   locale.value = locales[(locales.indexOf(locale.value) + 1) % locales.length]
+}
+
+const signOut = () => {
+  auth
+    .signOut()
 }
 </script>
 
@@ -33,5 +43,9 @@ const toggleLocales = () => {
     <a class="icon-btn mx-2" rel="noreferrer" href="https://github.com/antfu/vitesse" target="_blank" title="GitHub">
       <carbon-logo-github />
     </a>
+
+    <button v-if="isAuthenticated" class="icon-btn mx-2" title="Sign Out" @click="signOut">
+      <carbon-exit />
+    </button>
   </nav>
 </template>

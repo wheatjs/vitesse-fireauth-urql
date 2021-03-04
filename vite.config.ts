@@ -10,6 +10,7 @@ import WindiCSS from 'vite-plugin-windicss'
 import { VitePWA } from 'vite-plugin-pwa'
 import VueI18n from '@intlify/vite-plugin-vue-i18n'
 import Prism from 'markdown-it-prism'
+import Vql from 'vite-plugin-vue-gql'
 
 export default defineConfig({
   resolve: {
@@ -29,6 +30,9 @@ export default defineConfig({
 
     // https://github.com/JohnCampionJr/vite-plugin-vue-layouts
     Layouts(),
+
+    // https://github.com/jacobclevenger/vite-plugin-vue-gql
+    Vql(),
 
     // https://github.com/antfu/vite-plugin-md
     Markdown({

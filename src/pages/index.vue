@@ -52,6 +52,15 @@ const { t } = useI18n()
         {{ t('button.go') }}
       </button>
     </div>
+
+    <div class="mt-4 grid gap-4 opacity-50">
+      <router-link to="/guarded">
+        View Guarded Route
+      </router-link>
+      <router-link to="/urql">
+        View Urql Data
+      </router-link>
+    </div>
   </div>
 </template>
 

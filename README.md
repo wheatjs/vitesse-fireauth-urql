@@ -43,6 +43,10 @@ Mocking up web app with <b>Vitesse</b><sup><em>(speed)</em></sup><br>
 
 - ☁️ Deploy on Netlify, zero-config
 
+- 🔥 Firebase Authentication
+
+- 📈 GraphQL support via Urql w/ [vite-plugin-vue-gql](https://github.com/jacobclevenger/vite-plugin-vue-gql)
+
 <br>
 
 ## Pre-packed
@@ -92,6 +96,15 @@ Mocking up web app with <b>Vitesse</b><sup><em>(speed)</em></sup><br>
   - [Windi CSS Intellisense](https://marketplace.visualstudio.com/items?itemName=voorjaar.windicss-intellisense) - IDE support for Windi CSS
   - [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint)
 
+## Guarding Routes
+
+```html
+<route lang="yaml">
+  meta:
+    authenticate: true
+</route>
+```
+
 ## Variations
 
 As this template is strongly opinionated, the following provides a curated list for community maintained variations with different preferences and feature sets. Check them out as well. PR to add yours are also welcome!
@@ -127,6 +140,7 @@ When you use this template, try follow the checklist to update your info properl
 - [ ] Change the favicon in `public`
 - [ ] Remove the `.github` folder which contains the funding info
 - [ ] Clean up the READMEs and remove routes
+- [ ] Add your .env file based on the .env.template file
 
 And, enjoy :)
 

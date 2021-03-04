@@ -5,8 +5,13 @@
     "dev": "vite --port 3333 --open"
   },
   "dependencies": {
+    "@urql/exchange-auth": "^0.1.2",
+    "@urql/vue": "^0.3.0",
     "@vueuse/core": "^4.3.1",
+    "@vueuse/firebase": "^4.3.1",
     "@vueuse/head": "^0.3.1",
+    "firebase": "^8.2.9",
+    "graphql": "^15.5.0",
     "nprogress": "^0.2.0",
     "prism-theme-vars": "^0.1.4",
     "vue": "^3.0.7",
@@ -33,6 +38,7 @@
     "vite-plugin-md": "^0.6.0",
     "vite-plugin-pages": "^0.4.9",
     "vite-plugin-pwa": "^0.5.6",
+    "vite-plugin-vue-gql": "^0.0.6",
     "vite-plugin-vue-layouts": "^0.2.2",
     "vite-plugin-windicss": "^0.6.2",
     "vite-ssg": "^0.8.12"
