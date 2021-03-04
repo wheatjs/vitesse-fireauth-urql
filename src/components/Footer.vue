@@ -2,10 +2,8 @@
 import { useI18n } from 'vue-i18n'
 import firebase from 'firebase/app'
 import { useAuth } from '@vueuse/firebase'
+import { useRouter } from 'vue-router'
 import { isDark, toggleDark } from '~/logics'
-
-const auth = firebase.auth()
-const { isAuthenticated } = useAuth()
 
 const { t, availableLocales, locale } = useI18n()
 
@@ -15,9 +13,14 @@ const toggleLocales = () => {
   locale.value = locales[(locales.indexOf(locale.value) + 1) % locales.length]
 }
 
+const auth = firebase.auth()
+const { isAuthenticated } = useAuth()
+const { push } = useRouter()
+
 const signOut = () => {
   auth
     .signOut()
+    .then(() => push({ name: 'auth-signin' }))
 }
 </script>
 

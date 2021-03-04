@@ -29,19 +29,13 @@ export const install: UserModule = ({ router, isClient }) => {
     messagingSenderId: VITE_FIREBASE_MESSAGING_SENDER_ID,
     appId: VITE_FIREBASE_APP_ID,
     measurementId: VITE_FIREBASE_MEASUREMENT_ID,
-  }).auth().onAuthStateChanged((user) => {
-    isInitalized.value = true
-
-    if (!user)
-      router.push({ name: 'auth-signin' })
-  })
+  }).auth().onAuthStateChanged(_ => isInitalized.value = true)
 
   /**
    * Router Hooks
    */
   router.beforeEach(async(to) => {
     await when(isInitalized).toBeTruthy()
-
     const { isAuthenticated } = useAuth()
 
     if (to.name === 'auth-signin' && isAuthenticated.value)
