@@ -16,7 +16,7 @@ const {
 } = import.meta.env
 
 export const install: UserModule = ({ router, isClient }) => {
-  if (!isClient)
+  if (isClient)
     return
 
   const isInitalized = ref(false)
