@@ -2,7 +2,8 @@
   "private": true,
   "scripts": {
     "build": "cross-env NODE_ENV=production vite build",
-    "dev": "vite --port 3333 --open"
+    "dev": "vite --port 3333 --open",
+    "serve": "vite serve"
   },
   "dependencies": {
     "@urql/exchange-auth": "^0.1.2",

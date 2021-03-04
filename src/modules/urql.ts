@@ -6,10 +6,13 @@ import { authExchange } from '@urql/exchange-auth'
 import 'firebase/auth'
 import urql from '@urql/vue'
 import { useAuth } from '@vueuse/firebase'
-import { watch } from 'vue'
+import { watch, ref } from 'vue'
+import { when } from '@vueuse/core'
 import { UserModule } from '~/types'
 
 const { VITE_GRAPHQL_URL } = import.meta.env
+
+const isInitalized = ref(false)
 
 function addAuthExchange(user: any) {
   return authExchange({
@@ -48,25 +51,17 @@ function addAuthExchange(user: any) {
 
 export const install: UserModule = ({ app, isClient }) => {
   if (isClient) {
-    let init = false
+    const { user } = useAuth()
+    firebase.auth().onAuthStateChanged(_ => isInitalized.value = true)
 
-    firebase
-      .auth()
-      .onAuthStateChanged(() => {
-        if (!init) {
-          init = true
-          const { user } = useAuth()
-
-          app.use(urql, {
-            url: VITE_GRAPHQL_URL,
-            exchanges: [
-              dedupExchange,
-              cacheExchange,
-              addAuthExchange(user),
-              fetchExchange,
-            ],
-          } as ClientOptions)
-        }
-      })
+    app.use(urql, {
+      url: VITE_GRAPHQL_URL,
+      exchanges: [
+        dedupExchange,
+        cacheExchange,
+        // addAuthExchange(user),
+        fetchExchange,
+      ],
+    } as ClientOptions)
   }
 }
